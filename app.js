@@ -5,7 +5,6 @@
 
 var http = require('http'),
     io = require('socket.io'),
-    ejs = require('ejs'),
     fs = require('fs'),
     sys = require('sys'),
     dmp = require('./google-diff-match-patch').diff_match_patch;
@@ -34,14 +33,14 @@ var socket = io.listen(server);
 var currentMessage = '';
 
 socket.on('connection', function(client){
-  client.send(JSON.stringify($dmp.patch_make('', currentMessage)));
+  client.send(currentMessage);
 
   client.on('message', function(message){ 
     sys.puts('message received: '+sys.inspect(message));
-    var patch = JSON.parse(message);
-    currentMessage = $dmp.patch_apply(patch, currentMessage)[0];
+    currentMessage = message;
     client.broadcast(message);
-  }); 
+  });
+
   client.on('disconnect', function(){ 
     sys.puts('disconnected: '+sys.inspect(arguments));
   });

@@ -4,45 +4,41 @@
 	<script src="http://github.com/LearnBoost/Socket.IO/raw/0.5.3/socket.io.js"></script> 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
 	<script src="http://neil.fraser.name/software/diff_match_patch/svn/trunk/javascript/diff_match_patch.js"></script> 
-    <title><%= title %></title>
+  <script src="http://laughinghan.github.com/mathquill/mathquill.js"></script>
+    <title>nEtherQuill</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
-    <h1>FOO</h1>
+    <h1>nEtherQuill</h1>
     <script>
       $(document).ready(function() {
         var $dmp = new diff_match_patch();
         var jqCollab = $('#collab');
+
+        jqCollab.mathquill('editable');
 
         var socket = new io.Socket();
         socket.connect();
         // io.setPath('/usr/local/lib/node/socket.io.js');
         //socket.on('connect', function(){ console.log(arguments); });
         socket.on('message', function(message){
-          console.log(message);
-          var message = JSON.parse(message);
-
-          collabVal = $dmp.patch_apply(message, jqCollab.val() || '')[0];
-          console.log(collabVal);
-          jqCollab.val(collabVal);
+          jqCollab.mathquill('latex', message);
         });
 
 
-        var collabVal = jqCollab.val();
-        $('#collab').keyup(function(e) {
-          console.log(e)
+        var collabVal = jqCollab.mathquill('latex');
+        jqCollab.keyup(function(e) {
+          console.log(e);
 
-          socket.send(
-            JSON.stringify(
-              $dmp.patch_make(collabVal,jqCollab.val())
-            )
-          );
+          var newCollabVal = jqCollab.mathquill('latex');
 
-          collabVal = jqCollab.val();
+          socket.send(jqCollab.mathquill('latex'));
+
+          collabVal = newCollabVal;
         });
       });
     </script>
 
-    <textarea id="collab"></textarea>
+    <div id="collab"></div>
   </body>
 </html>
