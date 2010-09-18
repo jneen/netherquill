@@ -1,8 +1,10 @@
 <h1><%= title %></h1>
 <p>Welcome to <%= title %>
 <script> 
- var socket = new io.Socket("http://localhost:3000"); 
- socket.on('connect', function(){  }) 
- socket.on('message', function(){  }) 
- socket.on('disconnect', function(){  }) 
+  var socket = new io.Socket();
+  socket.connect();
+ // io.setPath('/usr/local/lib/node/socket.io.js');
+  socket.on('connect', function(){ console.log(arguments); });
+  socket.on('message', function(){ console.log(arguments); });
+  setInterval(function() { socket.send({wtf:"LOL!"}); }, 1000);
 </script>
