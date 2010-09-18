@@ -1,2 +1,8 @@
 <h1><%= title %></h1>
 <p>Welcome to <%= title %>
+<script> 
+ var socket = new io.Socket("http://localhost:3000"); 
+ socket.on('connect', function(){  }) 
+ socket.on('message', function(){  }) 
+ socket.on('disconnect', function(){  }) 
+</script>

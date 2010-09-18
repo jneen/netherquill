@@ -4,8 +4,10 @@
  */
 
 var express = require('express'),
-    connect = require('connect');
+    connect = require('connect'),
+    io = require('socket.io');
 
+var sys = require('sys');
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -34,6 +36,16 @@ app.get('/', function(req, res){
             title: 'Express'
         }
     });
+});
+
+var socket = io.listen(app); 
+socket.on('connection', function(client){ 
+  	client.on('message', function(){ 
+		sys.puts(sys.inspect(arguments)) 
+	});
+  	client.on('disconnect', function(){ 
+		sys.puts(sys.inspect(arguments))
+	});
 });
 
 // Only listen on $ node app.js
